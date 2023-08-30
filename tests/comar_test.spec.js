@@ -1,5 +1,6 @@
 const { test, expect } = require("@playwright/test");
 // const { chromium } = require("playwright");
+import { ComarTestPage } from "../pages/ComarTestPage";
 
 {
   test, expect;
@@ -7,45 +8,69 @@ const { test, expect } = require("@playwright/test");
 require("@playwright/test");
 
 test("comartest", async ({ page }) => {
-  await page.goto("https://www.comar.tn");
+  const driver = new ComarTestPage(page);
 
-  await page.click("text=Actualités");
+  await driver.navigate("https://www.comar.tn/");
 
-  const actualitésword = page.getByRole("heading", {
-    name: "Actualités",
-    exact: true,
-  });
+  await driver.ClickOnActualitesWord("Actualités");
 
-  await expect(actualitésword).toBeVisible();
+  const resultText = "Actualités";
 
-  await page
-    .locator('input[name="searchMeta"]')
-    .type("COMAR Assurances partenaire");
-  await page.locator("#edit-submit-actualites").click();
+  expect(await driver.CheckText(resultText)).toBeTruthy();
 
-  const partenariatText =
+  await driver.search("COMAR Assurances partenaire");
+
+  const result_Text =
     "COMAR Assurances partenaire du Semi-Marathon Ulysse Djerba";
-  const partenariatTextstring = partenariatText.toString();
-  const link = await page.getByRole("link", {
-    name: partenariatTextstring,
-  });
-  await expect(link).toBeVisible();
+  expect(await driver.CheckText(result_Text)).toBeTruthy();
 
   await page.close();
 
-  // hard assertion
+  // await page
+  //   .locator('input[name="searchMeta"]')
+  //   .type("COMAR Assurances partenaire");
+  // await page.locator("#edit-submit-actualites").click();
 
-  // //  url
-  // const pageurl = page.url();
+  // const partenariatText =
+  //   "COMAR Assurances partenaire du Semi-Marathon Ulysse Djerba";
+  // const partenariatTextstring = partenariatText.toString();
+  // const link = await page.getByRole("link", {
+  //   name: partenariatTextstring,
+  // });
+  // await expect(link).toBeVisible();
+
+  // hard assertion : quand il aura une erreur le script s'arrete
+
+  //  url
+
   // await expect(page).toHaveURL("https://www.comar.tn/actualites");
 
   // // title
 
-  // const pagetitle = page.title();
-  // console.log(pagetitle);
   // await expect(page).toHaveTitle(
   //   "COMAR Assurances, Compagnie d'assurance Tunisie | Assurances Particulier"
   // );
 
-  // soft assertion
+  // // soft assertion : meme si il y a une erreur le script continue à s'exécuter
+
+  // const pageurl = page.url();
+  // await expect.soft(page).toHaveURL("https://www.comar.tn/actualitesqqq");
+
+  // // check that the word ACTUALITES
+  // const actualitéswords = page.getByRole("heading", {
+  //   name: "ACTUALITÉS",
+  //   exact: true,
+  // });
+
+  // await expect.soft(actualitéswords).toBeVisible();
+
+  // // title
+
+  // await expect
+  //   .soft(page)
+  //   .toHaveTitle(
+  //     "COMAR Assurances, Compagnie d'assurance Tunisie | Assurances Particulier"
+  //   );
+
+  // await page.close();
 });
