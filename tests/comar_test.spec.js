@@ -11,26 +11,28 @@ test.beforeEach(async ({ page }) => {
   const driver = new ComarTestPage(page);
 
   await driver.navigate("https://www.comar.tn/");
+  await driver.ClickOnActualitesWord("Actualités");
 });
 
 test.afterEach(async ({ page }) => {
   await page.close();
 });
 
-test("comartest", async ({ page }) => {
+test("Check the word", async ({ page }) => {
   const driver = new ComarTestPage(page);
-  await driver.ClickOnActualitesWord("Actualités");
 
   const resultText = "Actualités";
-  await page.waitForTimeout(3000); // Pause for 3 seconds
+  await page.waitForTimeout(3000);
 
   expect(await driver.CheckText(resultText)).toBeTruthy();
-
+});
+test("check for the text", async ({ page }) => {
+  const driver = new ComarTestPage(page);
   await driver.search("COMAR Assurances partenaire");
 
   const result_Text =
     "COMAR Assurances partenaire du Semi-Marathon Ulysse Djerba";
-  await page.waitForTimeout(3000); // Pause for 3 seconds
+  await page.waitForTimeout(3000);
 
   expect(await driver.CheckText(result_Text)).toBeTruthy();
 });
